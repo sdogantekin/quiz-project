@@ -38,6 +38,7 @@ export default function QuizCard({
         {question.answers.map((answer, i) => (
           <button
             key={answer}
+            data-testid="answer-button"
             onClick={() => onAnswer(i)}
             className="flex items-center gap-4 border-b border-[var(--border)] px-1 py-5 text-left text-base text-[var(--foreground)] transition-all duration-150 hover:pl-3 hover:text-[var(--accent-strong)]"
           >
