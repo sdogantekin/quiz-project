@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Style 4: Warm & Cozy</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #F4E4D4 0%, #E8C9A0 50%, #D9A876 100%);
+    font-family: 'Palatino', 'Georgia', serif;
+    padding: 24px;
+  }
+  .card {
+    background: #FFF8EF;
+    border-radius: 20px;
+    max-width: 480px;
+    width: 100%;
+    padding: 44px;
+    box-shadow: 0 15px 40px rgba(94, 62, 30, 0.25);
+    border: 1px solid #E3C9A3;
+  }
+  .meta {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: #A87C4F;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 400;
+    color: #4A3423;
+    margin: 0 0 32px;
+    line-height: 1.4;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FBEFDF;
+    border: 1px solid #E3C9A3;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #5C4630;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    font-family: -apple-system, sans-serif;
+  }
+  .option:hover {
+    background: #F0DCC0;
+    transform: translateX(4px);
+  }
+  .leaf { color: #A87C4F; font-size: 18px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="meta">☕ Question 3 of 7</div>
+    <h1>It's Saturday morning with nothing planned. What are you doing?</h1>
+    <div class="option"><span class="leaf">◆</span> Chasing an adrenaline rush somewhere new</div>
+    <div class="option"><span class="leaf">◆</span> Staying in with a blanket and a good show</div>
+    <div class="option"><span class="leaf">◆</span> A quiet walk, just me and my thoughts</div>
+    <div class="option"><span class="leaf">◆</span> Still asleep, obviously</div>
+  </div>
+</body>
+</html>

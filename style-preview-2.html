@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Style 2: Minimal & Clean</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FAFAFA;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    max-width: 460px;
+    width: 100%;
+    padding: 56px 48px;
+  }
+  .meta {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #111;
+    margin: 0 0 40px;
+    line-height: 1.4;
+  }
+  .option {
+    display: block;
+    border: none;
+    border-bottom: 1px solid #E5E5E5;
+    padding: 18px 4px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    transition: padding-left 0.2s, color 0.2s;
+  }
+  .option:hover {
+    padding-left: 12px;
+    color: #000;
+    border-bottom-color: #000;
+  }
+  .progress-bar {
+    height: 2px;
+    background: #EEE;
+    width: 100%;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .progress-fill {
+    height: 2px;
+    background: #111;
+    width: 42%;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="meta">Question 3 / 7</div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <h1>It's Saturday morning with nothing planned. What are you doing?</h1>
+    <div class="option">Chasing an adrenaline rush somewhere new</div>
+    <div class="option">Staying in with a blanket and a good show</div>
+    <div class="option">A quiet walk, just me and my thoughts</div>
+    <div class="option">Still asleep, obviously</div>
+  </div>
+</body>
+</html>
