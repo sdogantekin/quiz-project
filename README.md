@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# What's Your Coffee Personality?
+
+A quiz that recommends a coffee based on the visitor's personality. Built with Next.js (App Router), TypeScript, and Tailwind CSS.
+
+Live at: https://quiz-project-rose-nine-51.vercel.app
+
+See [REQUIREMENTS.md](./REQUIREMENTS.md) for the original spec (results, questions, and visual style).
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `lib/quiz-data.ts` - the 5 personality/coffee results and the 10 questions
+- `lib/scoring.ts` - picks the winning personality from the answer tally
+- `lib/chime.ts` - the little sound effect on the result screen
+- `components/QuizCard.tsx` - renders one question
+- `components/ResultCard.tsx` - renders the result (image, confetti, sound, animations)
+- `components/ShareButtons.tsx` - native share / X / copy-link on the result screen
+- `app/page.tsx` - ties it all together (question index, scores, which screen to show)
 
-## Learn More
+## Testing
 
-To learn more about Next.js, take a look at the following resources:
+**Unit tests** (Vitest) - the scoring logic and quiz data integrity:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm test
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**End-to-end smoke tests** (Playwright) - loads the quiz in a real browser, answers all 10 questions, checks the result appears, checks "Take it again" resets:
 
-## Deploy on Vercel
+```bash
+npm run test:e2e
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## CI/CD
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Pre-push git hook** (`.git/hooks/pre-push`) runs `npm test` before any push leaves this machine.
+- **GitHub Actions** (`.github/workflows/tests.yml`) runs unit tests + E2E tests on every push to `main`, on GitHub's own runners.
+- **Vercel build gate** (`vercel.json`) runs `npm test` as part of the production build - a failing test blocks the deploy.
+
+Pushing to `main` on GitHub auto-deploys to Vercel (the repo is connected via Vercel's GitHub integration).

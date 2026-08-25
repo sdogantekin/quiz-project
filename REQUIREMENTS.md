@@ -68,3 +68,13 @@ Answer order for every question is: **Bold Adventurer → Cozy Classic → Zen M
 
 - `style-preview-1.html` … `style-preview-4.html` — style exploration previews (reference only, not part of final build)
 - `public/bold-adventurer.jpg`, `public/cozy-classic.jpg`, `public/zen-minimalist.jpg`, `public/night-owl.jpg`, `public/health-nut.jpg` — result images
+
+## Built After Initial Spec
+
+Added during iteration, not part of the original plan above — see [README.md](./README.md) for how to run/test them:
+
+- Confetti burst, a synthesized chime sound, and staggered entrance animations on the result screen
+- Share buttons on the result screen (native share sheet, share on X, copy link)
+- Unit tests (Vitest) for the scoring logic and quiz data
+- End-to-end smoke tests (Playwright)
+- CI/CD: a pre-push git hook, a GitHub Actions workflow, and a Vercel build gate — all running the test suite before code can ship
