@@ -45,7 +45,7 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
   return (
     <div
       className="animate-fade-in-up mb-8 flex flex-wrap items-center justify-center gap-3"
-      style={{ animationDelay: "0.55s" }}
+      style={{ animationDelay: "0.7s" }}
     >
       {typeof navigator !== "undefined" && "share" in navigator && (
         <button

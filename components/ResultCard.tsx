@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 import { Personality } from "@/lib/quiz-data";
 import { playChime } from "@/lib/chime";
 import ShareButtons from "@/components/ShareButtons";
+import EmailCapture from "@/components/EmailCapture";
 
 type ResultCardProps = {
   result: Personality;
@@ -91,12 +92,14 @@ export default function ResultCard({ result, onRetake }: ResultCardProps) {
         &ldquo;{result.tagline}&rdquo;
       </p>
 
+      <EmailCapture personalityId={result.id} />
+
       <ShareButtons result={result} />
 
       <button
         onClick={onRetake}
         className="animate-fade-in-up rounded-full border border-[var(--border)] px-6 py-3 text-sm font-medium text-[var(--foreground)] transition-colors duration-150 hover:bg-[var(--border)]"
-        style={{ animationDelay: "0.7s" }}
+        style={{ animationDelay: "0.8s" }}
       >
         Take it again
       </button>

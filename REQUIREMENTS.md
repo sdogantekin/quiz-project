@@ -78,3 +78,4 @@ Added during iteration, not part of the original plan above — see [README.md](
 - Unit tests (Vitest) for the scoring logic and quiz data
 - End-to-end smoke tests (Playwright)
 - CI/CD: a pre-push git hook, a GitHub Actions workflow, and a Vercel build gate — all running the test suite before code can ship
+- Opt-in email capture on the result screen (explicit consent checkbox), stored in a Neon Postgres database

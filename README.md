@@ -23,7 +23,18 @@ Open [http://localhost:3000](http://localhost:3000) to see it.
 - `components/QuizCard.tsx` - renders one question
 - `components/ResultCard.tsx` - renders the result (image, confetti, sound, animations)
 - `components/ShareButtons.tsx` - native share / X / copy-link on the result screen
+- `components/EmailCapture.tsx` - opt-in email capture form on the result screen
+- `app/api/subscribe/route.ts` - validates and stores an opted-in email + result
+- `lib/db.ts` - Neon Postgres client
 - `app/page.tsx` - ties it all together (question index, scores, which screen to show)
+
+## Email Capture
+
+Visitors can opt in (explicit checkbox required) to have their email saved alongside their quiz result, stored in a Neon Postgres database.
+
+- Database is provisioned via Vercel's Neon integration; connection env vars (`DATABASE_URL`, etc.) are already set on the Vercel project across all environments and in local `.env.local` (gitignored).
+- Schema lives in `scripts/create-schema.mjs` - run once against a fresh database with `node --env-file=.env.local scripts/create-schema.mjs`.
+- `lib/email.ts` has the validation logic (unit tested); `app/api/subscribe/route.ts` re-validates server-side before inserting.
 
 ## Testing
 
