@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { personalities, questions } from "@/lib/quiz-data";
+import { getWinningIndex } from "@/lib/scoring";
 import QuizCard from "@/components/QuizCard";
 import ResultCard from "@/components/ResultCard";
 
@@ -27,7 +28,7 @@ export default function Home() {
     setScores(new Array(personalities.length).fill(0));
   }
 
-  const winningIndex = scores.indexOf(Math.max(...scores));
+  const winningIndex = getWinningIndex(scores);
   const result = personalities[winningIndex];
 
   return (
