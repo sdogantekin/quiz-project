@@ -6,9 +6,10 @@ import { Personality } from "@/lib/quiz-data";
 
 type ShareButtonsProps = {
   result: Personality;
+  sessionId: string;
 };
 
-export default function ShareButtons({ result }: ShareButtonsProps) {
+export default function ShareButtons({ result, sessionId }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const shareText = `I'm a ${result.name} - my coffee match is a ${result.coffee}! ${result.icon} What's your coffee personality?`;
@@ -21,7 +22,10 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      trackEvent("share_clicked", { method: "copy_link", personality: result.id });
+      trackEvent("share_clicked", sessionId, {
+        method: "copy_link",
+        personality: result.id,
+      });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Clipboard access can be blocked - the button just won't confirm.
@@ -36,7 +40,10 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
           text: shareText,
           url: shareUrl,
         });
-        trackEvent("share_clicked", { method: "native", personality: result.id });
+        trackEvent("share_clicked", sessionId, {
+          method: "native",
+          personality: result.id,
+        });
       } catch {
         // User cancelled the share sheet - nothing to do.
       }
@@ -44,7 +51,10 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
   }
 
   function handleTwitterClick() {
-    trackEvent("share_clicked", { method: "twitter", personality: result.id });
+    trackEvent("share_clicked", sessionId, {
+      method: "twitter",
+      personality: result.id,
+    });
   }
 
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(

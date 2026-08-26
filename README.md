@@ -55,6 +55,8 @@ Funnel events are tracked via `trackEvent()` in `lib/track.ts`, which does two t
 - `share_clicked` - one of the three share actions used (`method`: `native` / `twitter` / `copy_link`, plus `personality`)
 - `quiz_retaken` - "Take it again" clicked
 
+**Session correlation:** each event also carries a `session_id` - a random id generated client-side once per quiz attempt (`app/page.tsx`, regenerated on retake). Without it, `events` would only support raw counts per event name (e.g. "share_clicked happened 12 times"), not a real funnel - there'd be no way to tell 12 clicks from 1 visitor apart from 12 clicks from 12 visitors, or compute "what % of people who started actually finished." The dashboard's funnel query uses `COUNT(DISTINCT session_id)` so repeat actions within one attempt only count once.
+
 ## Dashboard
 
 `/dashboard` shows aggregate stats only - it deliberately does **not** list raw emails (visitors consented to having their email stored, not published); to see the actual email list, query the `subscribers` table directly via the Neon console in the Vercel dashboard.

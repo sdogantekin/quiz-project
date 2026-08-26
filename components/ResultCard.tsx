@@ -12,11 +12,16 @@ import EmailCapture from "@/components/EmailCapture";
 type ResultCardProps = {
   result: Personality;
   onRetake: () => void;
+  sessionId: string;
 };
 
-export default function ResultCard({ result, onRetake }: ResultCardProps) {
+export default function ResultCard({
+  result,
+  onRetake,
+  sessionId,
+}: ResultCardProps) {
   useEffect(() => {
-    trackEvent("quiz_completed", { personality: result.id });
+    trackEvent("quiz_completed", sessionId, { personality: result.id });
 
     const colors = ["#a87c4f", "#e3c9a3", "#4a3423", "#fff8ef"];
 
@@ -95,9 +100,9 @@ export default function ResultCard({ result, onRetake }: ResultCardProps) {
         &ldquo;{result.tagline}&rdquo;
       </p>
 
-      <EmailCapture personalityId={result.id} />
+      <EmailCapture personalityId={result.id} sessionId={sessionId} />
 
-      <ShareButtons result={result} />
+      <ShareButtons result={result} sessionId={sessionId} />
 
       <button
         onClick={onRetake}

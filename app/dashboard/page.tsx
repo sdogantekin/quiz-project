@@ -35,7 +35,11 @@ export default async function DashboardPage() {
         GROUP BY day
         ORDER BY day
       `,
-      sql`SELECT name, COUNT(*)::int AS count FROM events GROUP BY name`,
+      sql`
+        SELECT name, COUNT(DISTINCT session_id)::int AS count
+        FROM events
+        GROUP BY name
+      `,
       sql`
         SELECT properties->>'method' AS method, COUNT(*)::int AS count
         FROM events
@@ -86,8 +90,10 @@ export default async function DashboardPage() {
             }))}
           />
           <p className="mt-4 text-xs text-[var(--muted)]">
-            Percentages are relative to quiz starts. Self-hosted in Postgres
-            until this project is on a Vercel Pro team (Custom Events).
+            Counts are distinct quiz attempts (not raw clicks), so repeat
+            actions in one attempt only count once. Percentages are relative
+            to quiz starts. Self-hosted in Postgres until this project is on
+            a Vercel Pro team (Custom Events).
           </p>
         </section>
 

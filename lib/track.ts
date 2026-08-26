@@ -17,12 +17,20 @@ export function isValidEventName(name: string): name is EventName {
 /**
  * Sends an event to Vercel Analytics (works once the project is on a Pro
  * team) and to our own `/api/track` endpoint (works today, on any plan).
+ *
+ * `sessionId` correlates events from the same quiz attempt (see
+ * `app/page.tsx`) - without it, events can only be counted independently,
+ * not turned into a real funnel.
  */
-export function trackEvent(name: EventName, properties?: Record<string, string>) {
+export function trackEvent(
+  name: EventName,
+  sessionId: string,
+  properties?: Record<string, string>
+) {
   vercelTrack(name, properties);
 
   try {
-    const body = JSON.stringify({ name, properties });
+    const body = JSON.stringify({ name, sessionId, properties });
     if (navigator.sendBeacon) {
       navigator.sendBeacon(
         "/api/track",

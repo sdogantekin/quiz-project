@@ -6,11 +6,15 @@ import { isValidEmail } from "@/lib/email";
 
 type EmailCaptureProps = {
   personalityId: string;
+  sessionId: string;
 };
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-export default function EmailCapture({ personalityId }: EmailCaptureProps) {
+export default function EmailCapture({
+  personalityId,
+  sessionId,
+}: EmailCaptureProps) {
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
@@ -44,7 +48,7 @@ export default function EmailCapture({ personalityId }: EmailCaptureProps) {
       }
 
       setStatus("success");
-      trackEvent("email_submitted", { personality: personalityId });
+      trackEvent("email_submitted", sessionId, { personality: personalityId });
     } catch (err) {
       setStatus("error");
       setFormError(
