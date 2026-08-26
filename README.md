@@ -2,6 +2,8 @@
 
 A quiz that recommends a coffee based on the visitor's personality. Built with Next.js (App Router), TypeScript, and Tailwind CSS.
 
+This is a basic learning project built while working through several vibe coding concepts - planning with a requirements doc, building and iterating with an AI pair, shipping to production, testing, CI/CD, and adding a small backend feature. Not a polished product.
+
 Live at: https://quiz-project-rose-nine-51.vercel.app
 
 See [REQUIREMENTS.md](./REQUIREMENTS.md) for the original spec (results, questions, and visual style).
