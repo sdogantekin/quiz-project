@@ -52,3 +52,66 @@ export function fillDailySeries(
 
   return series;
 }
+
+export type EventCountRow = { name: string; count: number };
+
+const FUNNEL_LABELS: Record<string, string> = {
+  quiz_started: "Started the quiz",
+  quiz_completed: "Got a result",
+  email_submitted: "Saved their email",
+  share_clicked: "Shared their result",
+  quiz_retaken: "Took it again",
+};
+
+export type FunnelStep = {
+  name: string;
+  label: string;
+  count: number;
+  percentage: number;
+};
+
+/**
+ * Turns raw {event name, count} rows into the funnel, in a fixed step order.
+ * Percentage is relative to `quiz_started` (the top of the funnel).
+ */
+export function buildFunnelSummary(rows: EventCountRow[]): FunnelStep[] {
+  const countByName = new Map(rows.map((r) => [r.name, r.count]));
+  const base = Math.max(1, countByName.get("quiz_started") ?? 0);
+
+  return Object.entries(FUNNEL_LABELS).map(([name, label]) => {
+    const count = countByName.get(name) ?? 0;
+    return { name, label, count, percentage: Math.round((count / base) * 100) };
+  });
+}
+
+export type ShareMethodRow = { method: string; count: number };
+
+const SHARE_METHOD_LABELS: Record<string, string> = {
+  native: "Native share",
+  twitter: "Share on X",
+  copy_link: "Copy link",
+};
+
+export type ShareMethodBreakdownRow = {
+  label: string;
+  count: number;
+  percentage: number;
+};
+
+/**
+ * Turns raw {method, count} rows (from the share_clicked event's
+ * `method` property) into a sorted, labeled breakdown.
+ */
+export function buildShareMethodBreakdown(
+  rows: ShareMethodRow[]
+): ShareMethodBreakdownRow[] {
+  const total = rows.reduce((sum, r) => sum + r.count, 0);
+
+  return rows
+    .map((r) => ({
+      label: SHARE_METHOD_LABELS[r.method] ?? r.method,
+      count: r.count,
+      percentage: total > 0 ? Math.round((r.count / total) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+}

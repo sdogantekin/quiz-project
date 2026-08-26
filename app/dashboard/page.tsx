@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { sql } from "@/lib/db";
-import { buildPersonalityBreakdown, fillDailySeries } from "@/lib/stats";
+import {
+  buildPersonalityBreakdown,
+  fillDailySeries,
+  buildFunnelSummary,
+  buildShareMethodBreakdown,
+} from "@/lib/stats";
 import BarChart from "@/components/BarChart";
 import TrendChart from "@/components/TrendChart";
 
@@ -15,25 +20,39 @@ const TREND_DAYS = 30;
 
 type PersonalityCountRow = { personality: string; count: number };
 type DailyCountRow = { day: string; count: number };
+type EventCountRow = { name: string; count: number };
+type ShareMethodRow = { method: string; count: number };
 
 export default async function DashboardPage() {
-  const [totalRows, breakdownRows, dailyRows] = await Promise.all([
-    sql`SELECT COUNT(*)::int AS total FROM subscribers`,
-    sql`SELECT personality, COUNT(*)::int AS count FROM subscribers GROUP BY personality`,
-    sql`
-      SELECT to_char(date_trunc('day', created_at), 'YYYY-MM-DD') AS day, COUNT(*)::int AS count
-      FROM subscribers
-      WHERE created_at >= now() - (${TREND_DAYS} * interval '1 day')
-      GROUP BY day
-      ORDER BY day
-    `,
-  ]);
+  const [totalRows, breakdownRows, dailyRows, funnelRows, shareMethodRows] =
+    await Promise.all([
+      sql`SELECT COUNT(*)::int AS total FROM subscribers`,
+      sql`SELECT personality, COUNT(*)::int AS count FROM subscribers GROUP BY personality`,
+      sql`
+        SELECT to_char(date_trunc('day', created_at), 'YYYY-MM-DD') AS day, COUNT(*)::int AS count
+        FROM subscribers
+        WHERE created_at >= now() - (${TREND_DAYS} * interval '1 day')
+        GROUP BY day
+        ORDER BY day
+      `,
+      sql`SELECT name, COUNT(*)::int AS count FROM events GROUP BY name`,
+      sql`
+        SELECT properties->>'method' AS method, COUNT(*)::int AS count
+        FROM events
+        WHERE name = 'share_clicked' AND properties->>'method' IS NOT NULL
+        GROUP BY method
+      `,
+    ]);
 
   const total = (totalRows[0]?.total as number) ?? 0;
   const breakdown = buildPersonalityBreakdown(
     breakdownRows as PersonalityCountRow[]
   );
   const daily = fillDailySeries(dailyRows as DailyCountRow[], TREND_DAYS);
+  const funnel = buildFunnelSummary(funnelRows as EventCountRow[]);
+  const shareMethods = buildShareMethodBreakdown(
+    shareMethodRows as ShareMethodRow[]
+  );
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
@@ -57,6 +76,23 @@ export default async function DashboardPage() {
 
         <section className="mb-14">
           <h2 className="mb-6 text-sm font-semibold tracking-wide text-[var(--muted)] uppercase">
+            Funnel
+          </h2>
+          <BarChart
+            data={funnel.map((step) => ({
+              label: step.label,
+              value: step.count,
+              percentage: step.percentage,
+            }))}
+          />
+          <p className="mt-4 text-xs text-[var(--muted)]">
+            Percentages are relative to quiz starts. Self-hosted in Postgres
+            until this project is on a Vercel Pro team (Custom Events).
+          </p>
+        </section>
+
+        <section className="mb-14">
+          <h2 className="mb-6 text-sm font-semibold tracking-wide text-[var(--muted)] uppercase">
             Results breakdown
           </h2>
           <BarChart
@@ -67,6 +103,21 @@ export default async function DashboardPage() {
             }))}
           />
         </section>
+
+        {shareMethods.length > 0 && (
+          <section className="mb-14">
+            <h2 className="mb-6 text-sm font-semibold tracking-wide text-[var(--muted)] uppercase">
+              How people shared
+            </h2>
+            <BarChart
+              data={shareMethods.map((row) => ({
+                label: row.label,
+                value: row.count,
+                percentage: row.percentage,
+              }))}
+            />
+          </section>
+        )}
 
         <section>
           <h2 className="mb-6 text-sm font-semibold tracking-wide text-[var(--muted)] uppercase">

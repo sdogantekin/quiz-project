@@ -28,7 +28,8 @@ Open [http://localhost:3000](http://localhost:3000) to see it.
 - `components/EmailCapture.tsx` - opt-in email capture form on the result screen
 - `app/api/subscribe/route.ts` - validates and stores an opted-in email + result
 - `lib/db.ts` - Neon Postgres client
-- `app/dashboard/page.tsx` - aggregate stats (no raw emails): total signups, results breakdown, 30-day trend
+- `lib/track.ts`, `app/api/track/route.ts` - funnel event tracking (Vercel Analytics + self-hosted in Postgres)
+- `app/dashboard/page.tsx` - aggregate stats (no raw emails): totals, funnel, breakdowns, 30-day trend
 - `lib/stats.ts` - pure data-shaping for the dashboard charts (unit tested)
 - `components/BarChart.tsx`, `components/TrendChart.tsx` - the two dashboard charts, with hover/focus tooltips
 - `app/result/[id]/page.tsx`, `app/result/[id]/opengraph-image.tsx` - shareable per-result pages with custom social preview images
@@ -44,7 +45,9 @@ Visitors can opt in (explicit checkbox required) to have their email saved along
 
 ## Analytics
 
-Vercel Web Analytics tracks pageviews automatically. Custom funnel events are tracked via `track()` from `@vercel/analytics`:
+Vercel Web Analytics tracks pageviews automatically (visible in the Vercel dashboard's Analytics tab). Vercel's **Custom Events** feature - the native UI for viewing named events like the ones below - requires a Pro team; this project is on Hobby.
+
+Funnel events are tracked via `trackEvent()` in `lib/track.ts`, which does two things per call: sends to Vercel Analytics (so events light up automatically once/if this project moves to Pro) **and** POSTs to `/api/track`, which writes to a self-hosted `events` table in the same Neon Postgres database used for email capture. The `/dashboard` page reads from that table today.
 
 - `quiz_started` - first answer clicked
 - `quiz_completed` - result screen shown (`personality` property)
@@ -52,11 +55,12 @@ Vercel Web Analytics tracks pageviews automatically. Custom funnel events are tr
 - `share_clicked` - one of the three share actions used (`method`: `native` / `twitter` / `copy_link`, plus `personality`)
 - `quiz_retaken` - "Take it again" clicked
 
-View them in the Vercel dashboard's Analytics tab, under Events.
-
 ## Dashboard
 
-`/dashboard` shows aggregate stats only - total signups, a results breakdown, a 30-day signup trend. It deliberately does **not** list raw emails (visitors consented to having their email stored, not published); to see the actual email list, query the `subscribers` table directly via the Neon console in the Vercel dashboard.
+`/dashboard` shows aggregate stats only - it deliberately does **not** list raw emails (visitors consented to having their email stored, not published); to see the actual email list, query the `subscribers` table directly via the Neon console in the Vercel dashboard.
+
+- Total signups, a results breakdown, a 30-day signup trend (from `subscribers`)
+- A funnel (quiz started → completed → emailed → shared → retaken) and a share-method breakdown (from `events`)
 
 ## Testing
 

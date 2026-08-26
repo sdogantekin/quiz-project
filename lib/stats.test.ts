@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { buildPersonalityBreakdown, fillDailySeries } from "./stats";
+import {
+  buildPersonalityBreakdown,
+  fillDailySeries,
+  buildFunnelSummary,
+  buildShareMethodBreakdown,
+} from "./stats";
 import { personalities } from "./quiz-data";
 
 describe("buildPersonalityBreakdown", () => {
@@ -61,5 +66,68 @@ describe("fillDailySeries", () => {
     );
     expect(result.find((r) => r.day === "2026-08-24")?.count).toBe(4);
     expect(result.find((r) => r.day === "2026-08-22")?.count).toBe(0);
+  });
+});
+
+describe("buildFunnelSummary", () => {
+  it("returns all 5 funnel steps in a fixed order, even with no data", () => {
+    const result = buildFunnelSummary([]);
+    expect(result.map((s) => s.name)).toEqual([
+      "quiz_started",
+      "quiz_completed",
+      "email_submitted",
+      "share_clicked",
+      "quiz_retaken",
+    ]);
+    expect(result.every((s) => s.count === 0)).toBe(true);
+  });
+
+  it("computes percentage relative to quiz_started", () => {
+    const result = buildFunnelSummary([
+      { name: "quiz_started", count: 10 },
+      { name: "quiz_completed", count: 6 },
+      { name: "email_submitted", count: 3 },
+    ]);
+    expect(result.find((s) => s.name === "quiz_completed")?.percentage).toBe(
+      60
+    );
+    expect(
+      result.find((s) => s.name === "email_submitted")?.percentage
+    ).toBe(30);
+  });
+
+  it("doesn't divide by zero when quiz_started is missing", () => {
+    const result = buildFunnelSummary([{ name: "quiz_completed", count: 2 }]);
+    expect(
+      result.find((s) => s.name === "quiz_completed")?.percentage
+    ).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe("buildShareMethodBreakdown", () => {
+  it("labels known methods and sorts by count descending", () => {
+    const result = buildShareMethodBreakdown([
+      { method: "copy_link", count: 2 },
+      { method: "twitter", count: 5 },
+      { method: "native", count: 1 },
+    ]);
+    expect(result[0]).toMatchObject({ label: "Share on X", count: 5 });
+    expect(result.map((r) => r.label)).toContain("Copy link");
+    expect(result.map((r) => r.label)).toContain("Native share");
+  });
+
+  it("computes percentage relative to the total", () => {
+    const result = buildShareMethodBreakdown([
+      { method: "twitter", count: 3 },
+      { method: "copy_link", count: 1 },
+    ]);
+    expect(result.find((r) => r.label === "Share on X")?.percentage).toBe(75);
+  });
+
+  it("falls back to the raw method name for unknown methods", () => {
+    const result = buildShareMethodBreakdown([
+      { method: "carrier_pigeon", count: 1 },
+    ]);
+    expect(result[0].label).toBe("carrier_pigeon");
   });
 });
