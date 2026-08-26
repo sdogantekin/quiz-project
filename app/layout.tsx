@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://quiz-project-rose-nine-51.vercel.app"),
   title: "What's Your Coffee Personality?",
   description: "Answer a few questions to find your coffee personality and drink match.",
 };

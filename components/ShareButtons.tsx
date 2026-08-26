@@ -11,10 +11,14 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const shareText = `I'm a ${result.name} - my coffee match is a ${result.coffee}! ${result.icon} What's your coffee personality?`;
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/result/${result.id}`
+      : "";
 
   async function handleCopyLink() {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -28,7 +32,7 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
         await navigator.share({
           title: "What's Your Coffee Personality?",
           text: shareText,
-          url: window.location.href,
+          url: shareUrl,
         });
       } catch {
         // User cancelled the share sheet - nothing to do.
@@ -38,9 +42,7 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
 
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     shareText
-  )}&url=${encodeURIComponent(
-    typeof window !== "undefined" ? window.location.href : ""
-  )}`;
+  )}&url=${encodeURIComponent(shareUrl)}`;
 
   return (
     <div
