@@ -69,7 +69,7 @@ export default function ShareButtons({ result, sessionId }: ShareButtonsProps) {
       {typeof navigator !== "undefined" && "share" in navigator && (
         <button
           onClick={handleNativeShare}
-          className="rounded-full bg-[var(--foreground)] px-5 py-2.5 text-sm font-medium text-[var(--background)] transition-opacity duration-150 hover:opacity-90"
+          className="rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors duration-150 hover:bg-[var(--border)]"
         >
           Share result
         </button>
