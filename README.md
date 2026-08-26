@@ -28,6 +28,10 @@ Open [http://localhost:3000](http://localhost:3000) to see it.
 - `components/EmailCapture.tsx` - opt-in email capture form on the result screen
 - `app/api/subscribe/route.ts` - validates and stores an opted-in email + result
 - `lib/db.ts` - Neon Postgres client
+- `app/dashboard/page.tsx` - aggregate stats (no raw emails): total signups, results breakdown, 30-day trend
+- `lib/stats.ts` - pure data-shaping for the dashboard charts (unit tested)
+- `components/BarChart.tsx`, `components/TrendChart.tsx` - the two dashboard charts, with hover/focus tooltips
+- `app/result/[id]/page.tsx`, `app/result/[id]/opengraph-image.tsx` - shareable per-result pages with custom social preview images
 - `app/page.tsx` - ties it all together (question index, scores, which screen to show)
 
 ## Email Capture
@@ -37,6 +41,10 @@ Visitors can opt in (explicit checkbox required) to have their email saved along
 - Database is provisioned via Vercel's Neon integration; connection env vars (`DATABASE_URL`, etc.) are already set on the Vercel project across all environments and in local `.env.local` (gitignored).
 - Schema lives in `scripts/create-schema.mjs` - run once against a fresh database with `node --env-file=.env.local scripts/create-schema.mjs`.
 - `lib/email.ts` has the validation logic (unit tested); `app/api/subscribe/route.ts` re-validates server-side before inserting.
+
+## Dashboard
+
+`/dashboard` shows aggregate stats only - total signups, a results breakdown, a 30-day signup trend. It deliberately does **not** list raw emails (visitors consented to having their email stored, not published); to see the actual email list, query the `subscribers` table directly via the Neon console in the Vercel dashboard.
 
 ## Testing
 
