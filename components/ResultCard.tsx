@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import confetti from "canvas-confetti";
+import { track } from "@vercel/analytics";
 import { Personality } from "@/lib/quiz-data";
 import { playChime } from "@/lib/chime";
 import ShareButtons from "@/components/ShareButtons";
@@ -15,6 +16,8 @@ type ResultCardProps = {
 
 export default function ResultCard({ result, onRetake }: ResultCardProps) {
   useEffect(() => {
+    track("quiz_completed", { personality: result.id });
+
     const colors = ["#a87c4f", "#e3c9a3", "#4a3423", "#fff8ef"];
 
     confetti({

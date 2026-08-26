@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { track } from "@vercel/analytics";
 import { personalities, questions } from "@/lib/quiz-data";
 import { getWinningIndex } from "@/lib/scoring";
 import QuizCard from "@/components/QuizCard";
@@ -15,6 +16,9 @@ export default function Home() {
   const isFinished = currentQuestion >= questions.length;
 
   function handleAnswer(personalityIndex: number) {
+    if (currentQuestion === 0) {
+      track("quiz_started");
+    }
     setScores((prev) => {
       const next = [...prev];
       next[personalityIndex] += 1;
@@ -24,6 +28,7 @@ export default function Home() {
   }
 
   function handleRetake() {
+    track("quiz_retaken");
     setCurrentQuestion(0);
     setScores(new Array(personalities.length).fill(0));
   }

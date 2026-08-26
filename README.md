@@ -42,6 +42,18 @@ Visitors can opt in (explicit checkbox required) to have their email saved along
 - Schema lives in `scripts/create-schema.mjs` - run once against a fresh database with `node --env-file=.env.local scripts/create-schema.mjs`.
 - `lib/email.ts` has the validation logic (unit tested); `app/api/subscribe/route.ts` re-validates server-side before inserting.
 
+## Analytics
+
+Vercel Web Analytics tracks pageviews automatically. Custom funnel events are tracked via `track()` from `@vercel/analytics`:
+
+- `quiz_started` - first answer clicked
+- `quiz_completed` - result screen shown (`personality` property)
+- `email_submitted` - opted-in email saved (`personality` property, never the email itself)
+- `share_clicked` - one of the three share actions used (`method`: `native` / `twitter` / `copy_link`, plus `personality`)
+- `quiz_retaken` - "Take it again" clicked
+
+View them in the Vercel dashboard's Analytics tab, under Events.
+
 ## Dashboard
 
 `/dashboard` shows aggregate stats only - total signups, a results breakdown, a 30-day signup trend. It deliberately does **not** list raw emails (visitors consented to having their email stored, not published); to see the actual email list, query the `subscribers` table directly via the Neon console in the Vercel dashboard.

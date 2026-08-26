@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { track } from "@vercel/analytics";
 import { Personality } from "@/lib/quiz-data";
 
 type ShareButtonsProps = {
@@ -20,6 +21,7 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
+      track("share_clicked", { method: "copy_link", personality: result.id });
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Clipboard access can be blocked - the button just won't confirm.
@@ -34,10 +36,15 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
           text: shareText,
           url: shareUrl,
         });
+        track("share_clicked", { method: "native", personality: result.id });
       } catch {
         // User cancelled the share sheet - nothing to do.
       }
     }
+  }
+
+  function handleTwitterClick() {
+    track("share_clicked", { method: "twitter", personality: result.id });
   }
 
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -62,6 +69,7 @@ export default function ShareButtons({ result }: ShareButtonsProps) {
         href={twitterUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={handleTwitterClick}
         className="rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors duration-150 hover:bg-[var(--border)]"
       >
         Share on X

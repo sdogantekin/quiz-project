@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { track } from "@vercel/analytics";
 import { isValidEmail } from "@/lib/email";
 
 type EmailCaptureProps = {
@@ -43,6 +44,7 @@ export default function EmailCapture({ personalityId }: EmailCaptureProps) {
       }
 
       setStatus("success");
+      track("email_submitted", { personality: personalityId });
     } catch (err) {
       setStatus("error");
       setFormError(
