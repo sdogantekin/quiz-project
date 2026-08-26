@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trackEvent } from "@/lib/track";
-import { personalities, questions } from "@/lib/quiz-data";
+import { personalities, questions, Question } from "@/lib/quiz-data";
+import { selectQuizQuestions } from "@/lib/select-questions";
 import { getWinningIndex } from "@/lib/scoring";
 import QuizCard from "@/components/QuizCard";
 import ResultCard from "@/components/ResultCard";
 
+const QUIZ_LENGTH = 10;
+
 export default function Home() {
+  // Starts null so the server-rendered HTML and the client's first render
+  // match exactly (both render nothing); the real, randomized question set
+  // is picked client-side right after mount, avoiding a hydration mismatch
+  // between two independently-randomized server vs. client selections.
+  const [activeQuestions, setActiveQuestions] = useState<Question[] | null>(
+    null
+  );
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState<number[]>(
     new Array(personalities.length).fill(0)
@@ -16,7 +26,17 @@ export default function Home() {
   // can be correlated into a real funnel instead of just independent counts.
   const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
 
-  const isFinished = currentQuestion >= questions.length;
+  useEffect(() => {
+    setActiveQuestions(selectQuizQuestions(questions, QUIZ_LENGTH));
+  }, []);
+
+  if (!activeQuestions) {
+    return (
+      <div className="min-h-screen bg-[var(--background)]" />
+    );
+  }
+
+  const isFinished = currentQuestion >= activeQuestions.length;
 
   function handleAnswer(personalityIndex: number) {
     if (currentQuestion === 0) {
@@ -33,6 +53,7 @@ export default function Home() {
   function handleRetake() {
     trackEvent("quiz_retaken", sessionId);
     setSessionId(crypto.randomUUID());
+    setActiveQuestions(selectQuizQuestions(questions, QUIZ_LENGTH));
     setCurrentQuestion(0);
     setScores(new Array(personalities.length).fill(0));
   }
@@ -46,9 +67,9 @@ export default function Home() {
         <ResultCard result={result} onRetake={handleRetake} sessionId={sessionId} />
       ) : (
         <QuizCard
-          question={questions[currentQuestion]}
+          question={activeQuestions[currentQuestion]}
           questionNumber={currentQuestion + 1}
-          totalQuestions={questions.length}
+          totalQuestions={activeQuestions.length}
           onAnswer={handleAnswer}
         />
       )}

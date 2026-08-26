@@ -79,3 +79,6 @@ Added during iteration, not part of the original plan above — see [README.md](
 - End-to-end smoke tests (Playwright)
 - CI/CD: a pre-push git hook, a GitHub Actions workflow, and a Vercel build gate — all running the test suite before code can ship
 - Opt-in email capture on the result screen (explicit consent checkbox), stored in a Neon Postgres database
+- Self-hosted funnel event tracking (Postgres, session-correlated) and an aggregate `/dashboard`
+- Custom per-result share pages with branded social preview images
+- Question pool expanded from 10 to 25; each attempt draws a random 10, shuffled, so retakes don't repeat the same quiz

@@ -158,4 +158,154 @@ export const questions: Question[] = [
       "Upbeat pop",
     ],
   },
+  {
+    question: "What's your dream home?",
+    answers: [
+      "A treehouse in the middle of nowhere",
+      "A cottage with a wraparound porch",
+      "A minimalist loft with nothing on the walls",
+      "A high-rise apartment overlooking the city lights",
+      "A house near a gym and a farmers market",
+    ],
+  },
+  {
+    question: "How do you like to travel?",
+    answers: [
+      "Solo, with a one-way ticket and no plan",
+      "With family, somewhere familiar and comfortable",
+      "Alone, somewhere quiet and untouched",
+      "Red-eye flights, chasing time zones",
+      "An active trip - hiking, cycling, swimming",
+    ],
+  },
+  {
+    question: "What's your idea of a perfect morning?",
+    answers: [
+      "Already outside before sunrise, chasing something",
+      "Coffee in bed, no alarm, no rush",
+      "Silence, stretching, and a clear mind",
+      "Morning? What morning - still asleep",
+      "A workout, a smoothie, and a plan for the day",
+    ],
+  },
+  {
+    question: "Pick a party you'd actually enjoy.",
+    answers: [
+      "A rooftop party that gets a little wild",
+      "A cozy dinner party with close friends",
+      "A quiet gathering, more listening than talking",
+      "An after-midnight party that's just getting started",
+      "A brunch with mimosas and good conversation",
+    ],
+  },
+  {
+    question: "What's your go-to weekend workout (or lack thereof)?",
+    answers: [
+      "Something extreme - rock climbing, boxing, sprinting",
+      "A leisurely walk, if that counts",
+      "Yoga, alone, no class needed",
+      "Whatever's open at 2am",
+      "A structured gym routine, tracked and logged",
+    ],
+  },
+  {
+    question: "Pick a movie genre for tonight.",
+    answers: [
+      "Action/adventure",
+      "Rom-com",
+      "Arthouse/foreign film",
+      "Horror/thriller",
+      "A documentary about health or nature",
+    ],
+  },
+  {
+    question: "Which video game world would you want to live in?",
+    answers: [
+      "An open-world survival game",
+      "Animal Crossing",
+      "A slow, atmospheric walking simulator",
+      "A dark, gothic RPG",
+      "A fitness/rhythm game world",
+    ],
+  },
+  {
+    question: "Pick a talk show host you'd want to hang out with.",
+    answers: [
+      "Someone loud and spontaneous",
+      "Someone warm and down-to-earth",
+      "Someone calm and thoughtful",
+      "A late-night host, obviously",
+      "Someone who's always talking about wellness",
+    ],
+  },
+  {
+    question: "Choose a superhero power.",
+    answers: [
+      "Super strength",
+      "Healing, for others",
+      "Invisibility",
+      "Night vision, never needing sleep",
+      "Super speed and stamina",
+    ],
+  },
+  {
+    question: "What's the vibe of your ideal playlist?",
+    answers: [
+      "High-energy, loud, fast",
+      "Familiar songs you know by heart",
+      "Instrumental, ambient, no lyrics",
+      "Late-night moody tracks",
+      "Upbeat and motivational",
+    ],
+  },
+  {
+    question: "Pick a texture.",
+    answers: [
+      "Rough, like stone",
+      "Soft, like a worn-in sweater",
+      "Smooth, like polished wood",
+      "Cool, like glass at night",
+      "Fresh, like cut grass",
+    ],
+  },
+  {
+    question: "If you were a kitchen appliance, you'd be...",
+    answers: [
+      "A blender - fast, intense, a little chaotic",
+      "A slow cooker - patient, warm, comforting",
+      "A French press - simple, deliberate",
+      "A coffee maker with a midnight timer",
+      "A juicer",
+    ],
+  },
+  {
+    question: "Pick a mythical creature.",
+    answers: [
+      "A dragon",
+      "A friendly giant",
+      "A quiet forest spirit",
+      "A vampire",
+      "A phoenix, always renewing",
+    ],
+  },
+  {
+    question: "What's your energy at 3pm on a Tuesday?",
+    answers: [
+      "Restless, need to move",
+      "Steady, unbothered",
+      "Focused, in the zone",
+      "Fading fast, running on caffeine",
+      "Energized - just had a walk",
+    ],
+  },
+  {
+    question: "Choose a font that matches your personality.",
+    answers: [
+      "Bold, all caps",
+      "Rounded, friendly script",
+      "Clean, minimal sans-serif",
+      "Dark, dramatic serif",
+      "Crisp, modern sans-serif",
+    ],
+  },
 ];

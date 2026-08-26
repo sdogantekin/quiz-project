@@ -19,7 +19,8 @@ Open [http://localhost:3000](http://localhost:3000) to see it.
 
 ## Project Structure
 
-- `lib/quiz-data.ts` - the 5 personality/coffee results and the 10 questions
+- `lib/quiz-data.ts` - the 5 personality/coffee results and the 25-question pool
+- `lib/select-questions.ts` - picks a random 10 (shuffled) from the pool each attempt, so retakes vary
 - `lib/scoring.ts` - picks the winning personality from the answer tally
 - `lib/chime.ts` - the little sound effect on the result screen
 - `components/QuizCard.tsx` - renders one question
