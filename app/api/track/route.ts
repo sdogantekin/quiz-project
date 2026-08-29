@@ -1,12 +1,25 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { isValidEventName } from "@/lib/track";
+import { checkRateLimit } from "@/lib/rate-limit-db";
+import { getClientIp } from "@/lib/rate-limit";
 
 const MAX_PROPERTIES = 5;
 const MAX_VALUE_LENGTH = 100;
 const MAX_SESSION_ID_LENGTH = 100;
 
 export async function POST(request: Request) {
+  const { allowed } = await checkRateLimit(`track:${getClientIp(request)}`, {
+    windowSeconds: 300,
+    maxRequests: 100,
+  });
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests." },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json().catch(() => null);
   const name = typeof body?.name === "string" ? body.name : "";
   const sessionId =

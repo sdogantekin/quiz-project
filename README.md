@@ -29,6 +29,7 @@ Open [http://localhost:3000](http://localhost:3000) to see it.
 - `components/EmailCapture.tsx` - opt-in email capture form on the result screen
 - `app/api/subscribe/route.ts` - validates and stores an opted-in email + result
 - `lib/db.ts` - Neon Postgres client
+- `lib/rate-limit.ts`, `lib/rate-limit-db.ts` - per-IP rate limiting for the public write endpoints
 - `lib/track.ts`, `app/api/track/route.ts` - funnel event tracking (Vercel Analytics + self-hosted in Postgres)
 - `app/dashboard/page.tsx` - aggregate stats (no raw emails): totals, funnel, breakdowns, 30-day trend
 - `lib/stats.ts` - pure data-shaping for the dashboard charts (unit tested)
@@ -57,6 +58,17 @@ Funnel events are tracked via `trackEvent()` in `lib/track.ts`, which does two t
 - `quiz_retaken` - "Take it again" clicked
 
 **Session correlation:** each event also carries a `session_id` - a random id generated client-side once per quiz attempt (`app/page.tsx`, regenerated on retake). Without it, `events` would only support raw counts per event name (e.g. "share_clicked happened 12 times"), not a real funnel - there'd be no way to tell 12 clicks from 1 visitor apart from 12 clicks from 12 visitors, or compute "what % of people who started actually finished." The dashboard's funnel query uses `COUNT(DISTINCT session_id)` so repeat actions within one attempt only count once.
+
+## Rate Limiting
+
+`/api/subscribe` and `/api/track` are public, unauthenticated write endpoints, so both are rate-limited per IP:
+
+- `/api/subscribe`: 5 requests / 10 minutes
+- `/api/track`: 100 requests / 5 minutes (generous, since one real quiz playthrough with retakes legitimately fires several events)
+
+Implemented in Postgres rather than pulling in a separate service (e.g. Upstash Redis, the usual serverless choice): `lib/rate-limit-db.ts` atomically upserts a per-`(endpoint:ip, window)` counter in a `rate_limits` table and rejects with `429` once the count exceeds the limit. Fixed-window, not sliding-window - simple, and good enough at this project's scale. The window-truncation math (`getWindowStart`) is pure and lives in `lib/rate-limit.ts`, split out specifically so it's unit-testable without a database connection.
+
+Known simplification: `rate_limits` rows accumulate over time (one per key per window) with no automatic cleanup - fine at this project's traffic, but a real production version would want a periodic job deleting old rows.
 
 ## Dashboard
 

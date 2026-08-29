@@ -48,4 +48,20 @@ await sql`
   CREATE INDEX IF NOT EXISTS events_session_id_idx ON events (session_id)
 `;
 
-console.log("Schema ready: subscribers and events tables exist.");
+// Fixed-window rate limiting for public write endpoints (/api/subscribe,
+// /api/track), keyed by "endpoint:ip". A row per (key, window_start) is
+// upserted and incremented atomically on each request; see lib/rate-limit.ts.
+await sql`
+  CREATE TABLE IF NOT EXISTS rate_limits (
+    key TEXT NOT NULL,
+    window_start TIMESTAMPTZ NOT NULL,
+    count INT NOT NULL DEFAULT 1,
+    PRIMARY KEY (key, window_start)
+  )
+`;
+
+await sql`
+  CREATE INDEX IF NOT EXISTS rate_limits_window_start_idx ON rate_limits (window_start)
+`;
+
+console.log("Schema ready: subscribers, events, and rate_limits tables exist.");
